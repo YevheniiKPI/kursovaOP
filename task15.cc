@@ -62,7 +62,8 @@ int main() {
     cout << "3. Quit" << endl;
     
     while (true) {
-        choice = get_user_input(1, 4);
+        cout << "Your choice: ";
+        choice = get_user_input(1, 3);
         switch(choice) {
             case 1: {
                 cout << "Start" << endl;
@@ -94,7 +95,7 @@ int main() {
                 cout << "Goodbye!" << endl;
                 exit(1);
             default:
-                cout << "You need to write from 1 to 4" << endl;
+                cout << "You need to write from 1 to 3" << endl;
                 break;
         }
     }
