@@ -16,6 +16,7 @@ restored alongside finding the correct domino placement.
 #include <iomanip>
 #include <chrono>
 #include <cstdlib>
+#include <algorithm>
 using namespace std;
 struct Cell {
     int num;
@@ -32,8 +33,8 @@ const int BOARD[8][9] = {
     {-2, -2, 0, 1, 1, 2, 2, -2, -2},
     {-2, -2, 0, 5, -1, 4, 0, -2, -2},
 };
-const int ROW = size(BOARD);
-const int COL = size(BOARD[0]);
+const int ROW = sizeof(BOARD) / sizeof(BOARD[0]);
+const int COL = sizeof(BOARD[0]) / sizeof(BOARD[0][0]);
 
 void init(struct Cell (*puzzle)[COL]);
 bool solve_puzzle(struct Cell (*puzzle)[COL], bool used[7][7], int m, int n, int &steps);
@@ -46,7 +47,8 @@ void print(struct Cell (*puzzle)[COL]);
 
 /* ---------------------------------------------------------------------[<]-
 Function: main
-Synopsis: TODO
+Synopsis: Displays the main menu and controls the program between the 
+auto-solver with a timer and the manual game mode.
 ---------------------------------------------------------------------[>]-*/
 int main() {
     Cell puzzle[ROW][COL];
@@ -87,7 +89,6 @@ int main() {
             }
             case 2:
                 user_solve(puzzle, used);
-                //TODO
                 break;
             case 3:
                 cout << "Goodbye!" << endl;
@@ -102,7 +103,9 @@ int main() {
 
 /* ---------------------------------------------------------------------[<]-
 Function: init
-Synopsis: TODO
+Synopsis: Initializes the puzzle structure. Copies the layout from the 
+constant source board, sets all cells to an unoccupied state and resets 
+their domino id to prepare for a new game or auto-solver.
 ---------------------------------------------------------------------[>]-*/
 void init(struct Cell (*puzzle)[COL]) {
     for (int i = 0; i < ROW; i++) {
@@ -117,8 +120,8 @@ void init(struct Cell (*puzzle)[COL]) {
 /* ---------------------------------------------------------------------[<]-
 Function: solve_puzzle
 Synopsis: Recursively attempts to place all 28 unique dominoes on the board 
-using a backtracking algorithm. It fills empty cells, which marked as -1, and checks 
-both horizontal and vertical placements.
+using a backtracking algorithm. It fills empty cells, which are marked as -1, 
+and checks both horizontal and vertical placements.
 ---------------------------------------------------------------------[>]-*/
 bool solve_puzzle(struct Cell (*puzzle)[COL], bool used[7][7], int m, int n, int &steps) {
     steps++;
@@ -190,7 +193,8 @@ bool solve_puzzle(struct Cell (*puzzle)[COL], bool used[7][7], int m, int n, int
 
 /* ---------------------------------------------------------------------[<]-
 Function: user_solve
-Synopsis: TODO
+Synopsis: Prompts user to input coordinates and missing numbers to place 
+dominoes. When board is full, it triggers final validation
 ---------------------------------------------------------------------[>]-*/
 void user_solve(struct Cell (*puzzle)[COL], bool used[7][7]) {
     init(puzzle);
@@ -275,7 +279,8 @@ void user_solve(struct Cell (*puzzle)[COL], bool used[7][7]) {
 
 /* ---------------------------------------------------------------------[<]-
 Function: test_puzzle
-Synopsis: TODO
+Synopsis: Validates the solved puzzle by checking full board coverage, 
+domino uniqueness and adjacency rules 
 ---------------------------------------------------------------------[>]-*/
 bool test_puzzle(struct Cell (*puzzle)[COL]) {
     bool coverage = true;
@@ -283,7 +288,7 @@ bool test_puzzle(struct Cell (*puzzle)[COL]) {
     bool neighbours = true;
 
     int counts[28]{0};
-    bool user_id[28]{false};
+    bool used_id[28]{false};
 
     if (count_occupied(puzzle) != 56) coverage = false;
 
@@ -291,7 +296,7 @@ bool test_puzzle(struct Cell (*puzzle)[COL]) {
         for (int j1 = 0; j1 < COL; j1++) {
             Cell cell = puzzle[i1][j1];
 
-            if (cell.occupied == false || cell.id == -1 || user_id[cell.id] == true) {
+            if (cell.occupied == false || cell.id == -1 || used_id[cell.id] == true) {
                 continue;
             }
 
@@ -310,7 +315,7 @@ bool test_puzzle(struct Cell (*puzzle)[COL]) {
                         int idx = find_id(v1, v2);
 
                         counts[idx]++;
-                        user_id[id] = true;
+                        used_id[id] = true;
                         break;
                     }
                 }
@@ -337,7 +342,9 @@ bool test_puzzle(struct Cell (*puzzle)[COL]) {
 
 /* ---------------------------------------------------------------------[<]-
 Function: get_user_input
-Synopsis: TODO
+Synopsis: Safely reads an integer from input within a specified range. 
+Handles input stream failures by clearing the error flag and ignoring 
+invalid characters
 ---------------------------------------------------------------------[>]-*/
 int get_user_input(int min, int max) {
     int num = 0;
@@ -357,7 +364,8 @@ int get_user_input(int min, int max) {
 
 /* ---------------------------------------------------------------------[<]-
 Function: find_id
-Synopsis: TODO
+Synopsis: Computes a unique index for any given domino pair using 
+an arithmetic progression formula.
 ---------------------------------------------------------------------[>]-*/
 int find_id(int i, int j) {
     int minV = min(i, j);
@@ -368,7 +376,8 @@ int find_id(int i, int j) {
 
 /* ---------------------------------------------------------------------[<]-
 Function: count_occupied
-Synopsis: TODO
+Synopsis: Iterates through the entire matrix and calculates the total 
+number of cells which are marked as occupied.
 ---------------------------------------------------------------------[>]-*/
 int count_occupied(struct Cell (*puzzle)[COL]) {
     int count = 0;
@@ -382,7 +391,8 @@ int count_occupied(struct Cell (*puzzle)[COL]) {
 
 /* ---------------------------------------------------------------------[<]-
 Function: print
-Synopsis: TODO
+Synopsis: Outputs the board and highlights placed dominoes with \033 code 
+for green color and marks missing numbers for clear navigation
 ---------------------------------------------------------------------[>]-*/
 void print(struct Cell (*puzzle)[COL]) {
     cout << "    ";

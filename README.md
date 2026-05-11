@@ -4,7 +4,7 @@ A C++ application that solves a domino puzzle where some numbers on the board ha
 
 ### Requirements
 * A C++ compiler
-* Standard C++11 or higher (for `<chrono>` and `auto` support)
+* Standard C++11 or higher
 
 ### Compilation
 ```bash
