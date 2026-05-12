@@ -238,14 +238,14 @@ void user_solve(struct Cell (*puzzle)[COL], bool used[7][7]) {
 
         if (puzzle[r1][c1].num != -1) n1 = puzzle[r1][c1].num;
         else {
-            cout << "Enter the number on first cell";
+            cout << "Enter the number on first cell: ";
             n1 = get_user_input(0, 6);
         }
         
 
         if (puzzle[r2][c2].num != -1) n2 = puzzle[r2][c2].num;
         else {
-            cout << "Enter the number on second cell";
+            cout << "Enter the number on second cell: ";
             n2 = get_user_input(0, 6);
         }
 
