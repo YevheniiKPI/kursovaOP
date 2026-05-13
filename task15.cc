@@ -4,8 +4,8 @@
 
  Group: TB-52
  Student: Demianenko Y. O.
- Written: 2025-04-28
- Revised: 2025-05-11
+ Written: 2026-04-28
+ Revised: 2026-05-13
  Description: Develop an algorithm for solving the domino puzzle and implement it
 as a program in ANSI C++. The game board contains a set of dominoes, where each 
 domino appears exactly once. The objective is to find the position of each domino.
